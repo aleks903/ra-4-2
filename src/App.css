@@ -1,0 +1,72 @@
+.form-add {
+  display: flex;
+  align-items: flex-end;
+}
+
+.form-add label {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.form-add input {
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.validate {
+  position: absolute;
+  height: 30px;
+  bottom: -30px;
+}
+
+.validate p {
+  margin: 0;
+  padding: 5px;
+  border: 1px solid #ff0000;
+}
+
+table {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+}
+
+thead, tbody {
+  padding: 15px;
+}
+
+tbody {
+  border: 1px solid;
+  border-radius: 20px;
+}
+
+td {
+  min-width: 150px;
+  text-align: center;
+}
+
+td:first-child {
+  text-align: left;
+}
+
+tbody td:last-child {
+  display: flex;
+  justify-content: center;
+}
+
+tbody td:last-child span {
+  width: 15px;
+  height: 15px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.change {
+  background-image: url('./img/pen.png');
+}
+
+.remove {
+  background-image: url('./img/close.png');
+}
