@@ -4,15 +4,28 @@ import ValidateMessage from './ValidateMessage.js';
 
 export default function TrainingAddForm(props) {
   const { valueForm } = props;
+  const [form, setForm] = useState(
+    valueForm,
+  );
+
   const [validateErr, setValidateErr] = useState({
     date: false,
     distance: false,
   });
+
+  if (valueForm.id) {
+    form.id = valueForm.id;
+    form.date = valueForm.date;
+    form.distance = valueForm.distance;
+    valueForm.id = null;
+  }
+
   const handleChange = (evt) => {
     const { name, value } = evt.target;
     setValidateErr((prevValidateErr) => ({ ...prevValidateErr, [name]: false }));
-    props.onFormChangre({ name, value });
+    setForm((prevForm) => ({ ...prevForm, [name]: value }));
   };
+
   const checkValue = (evt) => {
     const { name, value } = evt.target;
     let regexpDate;
@@ -31,15 +44,22 @@ export default function TrainingAddForm(props) {
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
-    if (valueForm.date && valueForm.distance) {
+    if (form.date && form.distance) {
       if (!validateErr.date && !validateErr.distance) {
-        const numberDistance = parseFloat(valueForm.distance);
-        const strKilometr = valueForm.distance.replace(numberDistance, '');
+        const numberDistance = parseFloat(form.distance);
+        const strKilometr = form.distance.replace(numberDistance, '');
 
         props.onFormSubmit({
-          date: valueForm.date,
+          id: form.id,
+          date: form.date,
           distance: numberDistance,
           kilometr: strKilometr,
+        });
+
+        setForm({
+          id: '',
+          date: '',
+          distance: '',
         });
       }
     }
@@ -48,11 +68,11 @@ export default function TrainingAddForm(props) {
   return (
     <form className="form-add">
       <label>Дата (ДД.ММ.ГГ)
-        <input name="date" value={valueForm.date} onChange={handleChange} onBlur={checkValue} />
+        <input name="date" value={form.date} onChange={handleChange} onBlur={checkValue} />
         {validateErr.date && <ValidateMessage msg={'Не верно введена дата!'} />}
       </label>
       <label>Пройдено км
-        <input name="distance" value={valueForm.distance} onChange={handleChange} onBlur={checkValue}/>
+        <input name="distance" value={form.distance} onChange={handleChange} onBlur={checkValue}/>
         {validateErr.distance && <ValidateMessage msg={'Не верно введена дистанция!'} />}
       </label>
       <input type="button" value="OK" onClick={handleSubmit} />
@@ -63,5 +83,4 @@ export default function TrainingAddForm(props) {
 TrainingAddForm.propTypes = {
   valueForm: PropTypes.object.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
-  onFormChangre: PropTypes.func.isRequired,
 };

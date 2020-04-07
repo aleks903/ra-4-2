@@ -8,39 +8,39 @@ import TrainingModel from '../model/TrainingModel.js';
 
 export default function TrainingHistory() {
   const [trainings, setTrainings] = useState([]);
-  const [form, setForm] = useState({
+  const [itemTraining, setItemTraining] = useState({
     id: '',
     date: '',
     distance: '',
   });
+
   const sortTrainings = trainings.sort((a, b) => moment(b.date, 'DD.MM.YY') - moment(a.date, 'DD.MM.YY'));
 
-  const handleFormChange = (objValue) => {
-    const { name, value } = objValue;
-    setForm((prevForm) => ({ ...prevForm, [name]: value }));
-  };
-
   const handleFormSubmit = (objValue) => {
-    const { date, distance, kilometr } = objValue;
+    const {
+      id,
+      date,
+      distance,
+      kilometr,
+    } = objValue;
 
-    if (!form.id) {
+    if (!id) {
       const training = new TrainingModel(shortid.generate(), date, distance, kilometr);
 
       setTrainings([...trainingsAddChange(trainings, training)]);
     } else {
-      setTrainings((prevTrainings) => prevTrainings.map((itemTraining) => {
-        if (itemTraining.id === form.id) {
-          return new TrainingModel(form.id, date, distance, kilometr);
+      setTrainings((prevTrainings) => prevTrainings.map((itemTrainings) => {
+        if (itemTrainings.id === id) {
+          setItemTraining({
+            id: '',
+            date: '',
+            distance: '',
+          });
+          return new TrainingModel(id, date, distance, kilometr);
         }
-        return itemTraining;
+        return itemTrainings;
       }));
     }
-
-    setForm({
-      id: '',
-      date: '',
-      distance: '',
-    });
   };
 
   const handleRemove = (id) => {
@@ -48,7 +48,7 @@ export default function TrainingHistory() {
   };
 
   const handleChange = (objValue) => {
-    setForm({
+    setItemTraining({
       id: objValue.id,
       date: objValue.date,
       distance: `${objValue.distance}${objValue.kilometr}`,
@@ -58,22 +58,11 @@ export default function TrainingHistory() {
   return (
     <React.Fragment>
       <TrainingAddForm
-        valueForm={form}
-        onFormChangre={handleFormChange}
+        valueForm={itemTraining}
+        // onFormChangre={handleFormChange}
         onFormSubmit={handleFormSubmit}
       />
-      <table>
-        <thead>
-          <tr>
-            <td>Дата (ДД.ММ.ГГ)</td>
-            <td>Пройдено км</td>
-            <td>Действия</td>
-          </tr>
-        </thead>
-        <tbody>
-          <TrainingsList data={sortTrainings} onRemove={handleRemove} onChange={handleChange} />
-        </tbody>
-      </table>
+      <TrainingsList data={sortTrainings} onRemove={handleRemove} onChange={handleChange} />
     </React.Fragment>
   );
 }
